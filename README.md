@@ -2,7 +2,7 @@
 
 Certainly! Here's a markdown guide on "How to Run this Django Project" tailored to your setup:
 
-```markdown
+
 # How to Run this Django Project
 
 This guide will help you set up and run the Django project on your local machine. The repository already contains a `requirements.txt` file and an `env` file, making the setup process straightforward.
@@ -31,6 +31,7 @@ cd DjangoBlog
 Even though the project includes an `env` file, you should create a new virtual environment to ensure everything works correctly:
 
 ```bash
+python3 -m venv env
 source env/bin/activate  # On Windows use `env\Scripts\activate`
 ```
 
@@ -99,4 +100,4 @@ If you created a superuser, you can access the Django admin interface at `http:/
 - **Database Errors**: Ensure that the database settings in `settings.py` match your local database configuration.
 
 By following these steps, you should be able to set up and run the Django project on your local machine successfully. If you encounter any issues, please check the troubleshooting section or reach out for further assistance.
-```
+

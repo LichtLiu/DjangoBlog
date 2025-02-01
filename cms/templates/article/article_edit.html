@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">編輯文章</h3>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- 文章基本信息 -->
+                        <div class="form-group">
+                            <label>標題</label>
+                            {{ form.title }}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>分類</label>
+                                    {{ form.category }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>標籤</label>
+                                    {{ form.tags }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 文章內容區段 -->
+                        <div class="sections-container">
+                            <h4>文章內容區段</h4>
+                            {{ formset.management_form }}
+                            {% for section_form in formset %}
+                                <div class="section-form">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            {{ section_form.section_type }}
+                                        </div>
+                                        <div class="col-md-8">
+                                            {{ section_form.content }}
+                                        </div>
+                                        <div class="col-md-1">
+                                            {{ section_form.order }}
+                                        </div>
+                                        <div class="col-md-1">
+                                            {% if section_form.instance.pk %}
+                                                {{ section_form.DELETE }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <!-- 添加新區段的按鈕 -->
+                        <button type="button" class="btn btn-info add-section mb-3">
+                            <i class="fas fa-plus"></i> 添加新區段
+                        </button>
+                        
+                        <div class="form-group">
+                            <label>封面圖片</label>
+                            {% if article.image %}
+                                <img src="{{ article.image.url }}" class="img-thumbnail mb-2" style="max-width: 200px">
+                            {% endif %}
+                            {{ form.image }}
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            {{ form.is_top }}
+                            <label class="form-check-label">置頂文章</label>
+                        </div>
+                        
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary">保存更改</button>
+                            <a href="{% url 'home' %}" class="btn btn-secondary">取消</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'admin/js/vendor/jquery/jquery.min.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 初始化 Select2
+        $('.select2').select2();
+        
+        // 動態添加新的區段
+        $('.add-section').click(function(e) {
+            e.preventDefault();
+            var form_idx = $('#id_sections-TOTAL_FORMS').val();
+            var newForm = $('.section-form:first').clone(true);
+            newForm.find(':input').val('').attr('id', function(index, value) {
+                return value.replace('-0-', '-' + form_idx + '-');
+            });
+            newForm.find('label').attr('for', function(index, value) {
+                return value.replace('-0-', '-' + form_idx + '-');
+            });
+            $('.sections-container').append(newForm);
+            $('#id_sections-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+        });
+    });
+</script>
+{% endblock %}
+{% endblock %}

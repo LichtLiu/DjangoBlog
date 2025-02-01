@@ -6,6 +6,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('register/', views.register_view, name='register'),
     path('', views.home, name='home'),  # CMS Home
+    path('article/edit/<int:pk>/', views.article_edit, name='article_edit'),
     # 显示文章列表
     #path('articles/', views.article_list, name='article_list'),
 
